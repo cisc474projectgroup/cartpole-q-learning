@@ -79,7 +79,7 @@ class Agent():
 
 class Trainer():
 
-    def __init__(self, agent, gamma=0.95, learning_rate=0.1, learning_rate_decay=None, epsilon=0.05, epsilon_decay=None, max_step=-1):
+    def __init__(self, agent, gamma=0.95, learning_rate=0.1, learning_rate_decay=None, epsilon=0.05, epsilon_decay=None, max_step=-1,target=500):
         self.agent = agent
         self.gamma = gamma
         self.learning_rate = learning_rate

@@ -8,7 +8,7 @@ from agent import Q, Agent, Trainer
 RECORD_PATH = os.path.join(os.path.dirname(__file__), "./upload")
 
 
-def main(episodes, render, monitor):
+def main(episodes, render, monitor,target =500):
     env = gym.make("cartpole-v474")
 
     q = Q(
@@ -51,4 +51,4 @@ if __name__ == "__main__":
         if os.path.isdir(RECORD_PATH):
             gym.upload(RECORD_PATH, api_key=args.upload)
     else:
-        main(args.episode, args.render, args.monitor)
+        main(args.episode, args.render, args.monitor,target = 500)
