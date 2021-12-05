@@ -15,7 +15,7 @@ def main(episodes, render, monitor):
         env.action_space.n, 
         env.observation_space, 
         bin_size=[3, 3, 8, 5],
-        low_bound=[None, -0.5, None, -math.radians(50)], 
+        low_bound=[None, -0.5, None, -math.radians(50)],
         high_bound=[None, 0.5, None, math.radians(50)]
         )
     agent = Agent(q, epsilon=0.05)
@@ -27,7 +27,7 @@ def main(episodes, render, monitor):
         gamma=0.99,
         learning_rate=0.5, learning_rate_decay=learning_decay, 
         epsilon=1.0, epsilon_decay=epsilon_decay,
-        max_step=500)
+        max_step=4000)
 
     if monitor:
         env.monitor.start(RECORD_PATH)
@@ -40,7 +40,7 @@ def main(episodes, render, monitor):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="train & run cartpole ")
-    parser.add_argument("--episode", type=int, default=1000, help="episode to train")
+    parser.add_argument("--episode", type=int, default=2500, help="episode to train")
     parser.add_argument("--render", action="store_true", help="render the screen")
     parser.add_argument("--monitor", action="store_true", help="monitor")
     parser.add_argument("--upload", type=str, default="", help="upload key to openai gym (training is not executed)")

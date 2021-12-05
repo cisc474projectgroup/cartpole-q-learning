@@ -67,7 +67,7 @@ class CartPoleEnv(gym.Env):
 
         # Angle at which to fail the episode
         self.theta_threshold_radians = 12 * 2 * math.pi / 360
-        self.x_threshold = 4.8
+        self.x_threshold = 2
 
         # Angle limit set to 2 * theta_threshold_radians so failing observation
         # is still within bounds.
@@ -131,12 +131,10 @@ class CartPoleEnv(gym.Env):
         cartx = self.state[0] * 1.5 + 600 / 2.0
 
         done = bool(
-            x < -self.x_threshold
-            or x > self.x_threshold
+            x < -self.x_threshold/6
+            or x > self.x_threshold*7/6
             or theta < -self.theta_threshold_radians
             or theta > self.theta_threshold_radians
-            or cartx > 600
-            or cartx < 0
         )
 
 
@@ -147,15 +145,19 @@ class CartPoleEnv(gym.Env):
         direction = self.state[1] * 10
         # print("状态得分:", direction)
 
-
+        if (x < -self.x_threshold/6 or x > self.x_threshold*7/6):
+            goal = -1000
+        else:
+            goal = 0
 
 
         if not done:
-            reward = 5 + position
+            reward = 10 + position + goal
+            # print("总分：",reward)
         elif self.steps_beyond_done is None:
             # Pole just fell!
             self.steps_beyond_done = 0
-            reward = 0
+            reward = -1000
         else:
             if self.steps_beyond_done == 0:
                 logger.warn(

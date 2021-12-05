@@ -99,7 +99,7 @@ class Trainer():
             step = 0
             done = False
             while not done:
-                if render:
+                if render and i>900:
                     env.render()
 
                 action = self.agent.act(obs)
