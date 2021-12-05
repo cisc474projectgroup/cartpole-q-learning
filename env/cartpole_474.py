@@ -9,6 +9,7 @@ import gym
 from gym import spaces, logger
 from gym.utils import seeding
 import numpy as np
+import time
 
 
 class CartPoleEnv(gym.Env):
@@ -133,19 +134,23 @@ class CartPoleEnv(gym.Env):
             or theta > self.theta_threshold_radians
         )
 
-        cartx = self.state[0] * 100
-        print("位置得分:",cartx)
+        cartx = self.state[0] * 1.5 + 600 / 2.0
+        position = -(cartx-500)**2/10000
+        # position = self.state[0] * 100
+        print("位置得分:",position)
 
         direction = self.state[1] * 10
         print("状态得分:", direction)
 
 
+
+
         if not done:
-            reward = cartx + direction
+            reward = 10 + position
         elif self.steps_beyond_done is None:
             # Pole just fell!
             self.steps_beyond_done = 0
-            reward = -10000000
+            reward = 0
         else:
             if self.steps_beyond_done == 0:
                 logger.warn(
