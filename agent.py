@@ -3,6 +3,7 @@ import copy
 from collections import defaultdict
 from collections import deque
 from collections import namedtuple
+from matplotlib import pyplot as plt
 import numpy as np
 
 
@@ -93,11 +94,17 @@ class Trainer():
 
     def train(self, env, episode_count, render=False):
         default_epsilon = self.agent.epsilon
+        mean_step_all =[]
+        mean_q_all=[]
+        goal_time_all=[]
+        reward_all=[]
         self.agent.epsilon = self.epsilon
         values = []
         steps = deque(maxlen=100)
         lr = self.learning_rate
         for i in range(episode_count):
+            reward_total = 0
+            goal_time =0
             obs = env.reset()
             step = 0
             done = False
@@ -106,8 +113,9 @@ class Trainer():
                     env.render()
 
                 action = self.agent.act(obs)
-                next_obs, reward, done, _ = env.step(action)
-
+                next_obs, reward, done,goal_time= env.step(action)
+                reward_total+= reward
+                goal_time += goal_time
                 state = self.agent.q.observation_to_state(obs)
                 future = 0 if done else np.max(self.agent.q.values(next_obs))
                 value = self.agent.q.table[state][action]
@@ -125,6 +133,12 @@ class Trainer():
                 print("Episode {}: {}steps(avg{}). epsilon={:.3f}, lr={:.3f}, mean q value={:.2f}".format(
                     i, step, mean_step, self.agent.epsilon, lr, mean)
                     )
+                
+                
+                mean_step_all.append(mean_step)
+                mean_q_all.append(mean)
+                reward_all.append(reward_total)
+                
                 if mean_step>1000:
                     render=True
                 
@@ -132,3 +146,25 @@ class Trainer():
                     self.agent.epsilon = self.epsilon_decay(self.agent.epsilon, i)
                 if self.learning_rate_decay is not None:
                     lr = self.learning_rate_decay(lr, i)
+
+        # plot in comparsion
+        plt.xlabel('Episodes')
+        plt.ylabel('reward')
+        
+        # plt.plot(mean_step_all, label='Q-learning', color='blue')
+        plt.plot(reward_all, label='Q-learning', color='yellow')
+        plt.plot(goal_time_all, label='Q-learning', color='green')
+        # plt.legend(['reward', 'Q-learning'], loc='upper right')
+        plt.title('reward/Episode')
+        plt.show()
+
+        # plot in comparsion
+        plt.xlabel('Episodes')
+        plt.ylabel('goal_time')
+
+        # plt.plot(mean_step_all, label='Q-learning', color='blue')
+        plt.plot(goal_time_all, label='Q-learning', color='green')
+        # plt.legend(['reward', 'Q-learning'], loc='upper right')
+        plt.title('goal/Episode')
+        plt.show()
+

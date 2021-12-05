@@ -40,7 +40,7 @@ def main(episodes, render, monitor,target =500):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="train & run cartpole ")
-    parser.add_argument("--episode", type=int, default=2500, help="episode to train")
+    parser.add_argument("--episode", type=int, default=3000, help="episode to train")
     parser.add_argument("--render", action="store_true", help="render the screen")
     parser.add_argument("--monitor", action="store_true", help="monitor")
     parser.add_argument("--upload", type=str, default="", help="upload key to openai gym (training is not executed)")
