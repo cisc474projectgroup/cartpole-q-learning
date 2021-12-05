@@ -64,16 +64,18 @@ class CartPoleEnv(gym.Env):
         self.force_mag = 10.0
         self.tau = 0.02  # seconds between state updates
         self.kinematics_integrator = "euler"
+        #TODO add a target point
+        self.target = 4
 
         # Angle at which to fail the episode
         self.theta_threshold_radians = 12 * 2 * math.pi / 360
-        self.x_threshold = 4.8
+        self.x_threshold = 2.4
 
         # Angle limit set to 2 * theta_threshold_radians so failing observation
         # is still within bounds.
         high = np.array(
             [
-                self.x_threshold,
+                self.x_threshold* 2,
                 np.finfo(np.float32).max,
                 self.theta_threshold_radians * 2,
                 np.finfo(np.float32).max,
@@ -83,7 +85,6 @@ class CartPoleEnv(gym.Env):
 
         self.action_space = spaces.Discrete(2)
         self.observation_space = spaces.Box(-high, high)
-        print(self.observation_space,'---------')
 
         self.seed()
         self.viewer = None
@@ -129,17 +130,16 @@ class CartPoleEnv(gym.Env):
         self.state = (x, x_dot, theta, theta_dot)
 
         done = bool(
-            x < -self.x_threshold
-            or x > self.x_threshold
+            x < -0.5
+            or x > self.x_threshold * 2
             or theta < -self.theta_threshold_radians
             or theta > self.theta_threshold_radians
         )
-
-        cartx = self.state[0] * 1.5 + 600 / 2.0
-        position = -(cartx-500)**2/10000
+        # cartx = self.state[0] 
+        position = -(self.state[0] -self.target)**2
         # position = self.state[0] * 100
         # print("位置得分:",position)
-
+        
         direction = self.state[1] * 10
         # print("状态得分:", direction)
 
@@ -147,7 +147,11 @@ class CartPoleEnv(gym.Env):
 
 
         if not done:
-            reward = 10 + position
+            reward = 0
+            if self.state[0] ==self.target:
+              reward += 1000
+            else:
+              reward +=  100+position
         elif self.steps_beyond_done is None:
             # Pole just fell!
             self.steps_beyond_done = 0
@@ -166,7 +170,7 @@ class CartPoleEnv(gym.Env):
         return np.array(self.state, dtype=np.float32), reward, done, {}
 
     def reset(self):
-        self.state = self.np_random.uniform(low=-0.05, high=0.05, size=(4,))
+        self.state = self.np_random.uniform(low=-0.05, high=0.05, size=(4,))  # spawn randomly
         self.steps_beyond_done = None
         return np.array(self.state, dtype=np.float32)
 
@@ -177,6 +181,7 @@ class CartPoleEnv(gym.Env):
         world_width = self.x_threshold * 2
         scale = screen_width / world_width
         carty = 100  # TOP OF CART
+        target = scale *self.target
         polewidth = 10.0
         polelen = scale * (2 * self.length)
         cartwidth = 50.0
@@ -210,7 +215,7 @@ class CartPoleEnv(gym.Env):
             self.axle.set_color(0.5, 0.5, 0.8)
             self.viewer.add_geom(self.axle)
             self.track = rendering.Line((0, carty), (screen_width, carty))
-            self.track2 = rendering.Line((500, 500), (500, 0))
+            self.track2 = rendering.Line((target, 500), (target, 0))
             self.track2.set_color(0, 0, 0)
 
             self.track.set_color(0, 0, 0)
