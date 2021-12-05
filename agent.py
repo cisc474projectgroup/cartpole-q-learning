@@ -19,11 +19,12 @@ class Q():
         for i, low, high in self._low_high_iter(observation_space, low_bound, high_bound):
             b_size = self._bin_sizes[i]
             bins = self._make_bins(low, high, b_size)
+            print(bins)
             self._dimension_bins.append(bins)
 
         # if we encounter the new observation, we initialize action evaluations
         self.table = defaultdict(lambda: initial_std * np.random.randn(self.n_actions) + initial_mean)
-    
+
     @classmethod
     def _make_bins(cls, low, high, bin_size):
         bins = np.arange(low, high, (float(high) - float(low)) / (bin_size - 2))  # exclude both ends
@@ -49,11 +50,13 @@ class Q():
             yield i, low, high
 
     def observation_to_state(self, observation):
+
         state = 0
         # caution: bin_size over 10 will not work accurately
         unit = max(self._bin_sizes)
         for d, o in enumerate(observation.flatten()):
             state = state + np.digitize(o, self._dimension_bins[d]) * pow(unit, d)  # bin_size numeral system
+
         return state
     
     def values(self, observation):
@@ -99,7 +102,7 @@ class Trainer():
             step = 0
             done = False
             while not done:
-                if render and i>900:
+                if render and i>2000:
                     env.render()
 
                 action = self.agent.act(obs)
