@@ -33,7 +33,8 @@ def main(episodes, render, monitor,target =500):
         env.monitor.start(RECORD_PATH)
 
     trainer.train(env, episode_count=episodes, render=render)
-
+    print(q.table)
+    
     if monitor:
         env.monitor.close()
 

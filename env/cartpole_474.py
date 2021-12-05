@@ -64,8 +64,9 @@ class CartPoleEnv(gym.Env):
         self.force_mag = 10.0
         self.tau = 0.02  # seconds between state updates
         self.kinematics_integrator = "euler"
+        self.left_end = -0.5
         #TODO add a target point
-        self.target = 4
+        self.target = 2
 
         # Angle at which to fail the episode
         self.theta_threshold_radians = 12 * 2 * math.pi / 360
@@ -85,7 +86,7 @@ class CartPoleEnv(gym.Env):
 
         self.action_space = spaces.Discrete(2)
         self.observation_space = spaces.Box(-high, high)
-
+        
         self.seed()
         self.viewer = None
         self.state = None
@@ -128,30 +129,35 @@ class CartPoleEnv(gym.Env):
             theta = theta + self.tau * theta_dot
 
         self.state = (x, x_dot, theta, theta_dot)
-
         done = bool(
-            x < -0.5
-            or x > self.x_threshold * 2
+            x < self.left_end    # reached out of the range
+            or x > self.x_threshold * 2  
             or theta < -self.theta_threshold_radians
             or theta > self.theta_threshold_radians
         )
+        
         # cartx = self.state[0] 
-        position = -(self.state[0] -self.target)**2
+        position = -abs(self.state[0] -self.target) /5
         # position = self.state[0] * 100
         # print("位置得分:",position)
         
         direction = self.state[1] * 10
+        # print(self.state)
         # print("状态得分:", direction)
-
-
 
 
         if not done:
             reward = 0
-            if self.state[0] ==self.target:
-              reward += 1000
+            if abs(self.state[0] - self.target) <= 0.005:
+              x=float(self.state[0])
+              y=float(self.target)
+              reward += 100000
+              print('1000000')
+              
             else:
-              reward +=  100+position
+              reward += 100 + direction 
+              # print(reward)
+
         elif self.steps_beyond_done is None:
             # Pole just fell!
             self.steps_beyond_done = 0
