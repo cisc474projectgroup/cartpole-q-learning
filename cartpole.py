@@ -2,14 +2,15 @@ import os
 import math
 import argparse
 import gym
+import env
 from agent import Q, Agent, Trainer
-
 
 RECORD_PATH = os.path.join(os.path.dirname(__file__), "./upload")
 
 
 def main(episodes, render, monitor):
-    env = gym.make("CartPole-v0") 
+    env = gym.make("cartpole-v0")
+    # env = CartPoleEnv()
 
     q = Q(
         env.action_space.n, 
