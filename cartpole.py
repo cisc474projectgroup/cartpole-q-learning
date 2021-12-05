@@ -14,7 +14,7 @@ def main(episodes, render, monitor,target =500):
     q = Q(
         env.action_space.n, 
         env.observation_space, 
-        bin_size=[31, 5, 8, 7],
+        bin_size=[17, 5, 8, 7],
         low_bound=[None, -0.5, None, -math.radians(50)],
         high_bound=[None, 0.5, None, math.radians(50)]
         )

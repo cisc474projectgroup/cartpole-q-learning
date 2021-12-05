@@ -149,7 +149,7 @@ class CartPoleEnv(gym.Env):
         # print("状态得分:", direction)
 
         if (x < -self.x_threshold/6 or x > self.x_threshold*13/6):
-            goal += -1000
+            goal += -10000
         else:
             goal += 0
 

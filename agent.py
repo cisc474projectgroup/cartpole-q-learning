@@ -102,7 +102,7 @@ class Trainer():
             step = 0
             done = False
             while not done:
-                if render and i>2000:
+                if render:
                     env.render()
 
                 action = self.agent.act(obs)
@@ -125,6 +125,8 @@ class Trainer():
                 print("Episode {}: {}steps(avg{}). epsilon={:.3f}, lr={:.3f}, mean q value={:.2f}".format(
                     i, step, mean_step, self.agent.epsilon, lr, mean)
                     )
+                if mean_step>1000:
+                    render=True
                 
                 if self.epsilon_decay is not None:                
                     self.agent.epsilon = self.epsilon_decay(self.agent.epsilon, i)
