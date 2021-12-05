@@ -133,13 +133,19 @@ class CartPoleEnv(gym.Env):
             or theta > self.theta_threshold_radians
         )
 
-        cartx = self.state[0] * 1.5 + 600 / 2.0
+        cartx = self.state[0] * 100
+        print("位置得分:",cartx)
+
+        direction = self.state[1] * 10
+        print("状态得分:", direction)
+
+
         if not done:
-            reward = 1.0 + cartx/1000
+            reward = cartx + direction
         elif self.steps_beyond_done is None:
             # Pole just fell!
             self.steps_beyond_done = 0
-            reward = 1.0 + cartx/1000
+            reward = -10000000
         else:
             if self.steps_beyond_done == 0:
                 logger.warn(
@@ -218,7 +224,7 @@ class CartPoleEnv(gym.Env):
 
         x = self.state
         cartx = x[0] * scale + screen_width / 2.0  # MIDDLE OF CART
-        self.carttrans.set_translation(cartx, carty)
+        self.carttrans.set_translation(cartx-200, carty)
         self.poletrans.set_rotation(-x[2])
 
         return self.viewer.render(return_rgb_array=mode == "rgb_array")

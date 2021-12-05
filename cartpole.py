@@ -9,7 +9,7 @@ RECORD_PATH = os.path.join(os.path.dirname(__file__), "./upload")
 
 
 def main(episodes, render, monitor):
-    env = gym.make("cartpole-v0")
+    env = gym.make("cartpole-v474")
     # env = CartPoleEnv()
 
     q = Q(
