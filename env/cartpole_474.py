@@ -135,9 +135,7 @@ class CartPoleEnv(gym.Env):
 
         done = bool(
             x < self.left_end    # reached out of the range
-            or x > self.x_threshold * 2  
-            x < -self.x_threshold/6
-            or x > self.x_threshold*7/6
+            or x > self.x_threshold * 2
             or theta < -self.theta_threshold_radians
             or theta > self.theta_threshold_radians
         )
