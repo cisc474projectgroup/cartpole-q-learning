@@ -128,14 +128,18 @@ class CartPoleEnv(gym.Env):
 
         self.state = (x, x_dot, theta, theta_dot)
 
+        cartx = self.state[0] * 1.5 + 600 / 2.0
+
         done = bool(
             x < -self.x_threshold
             or x > self.x_threshold
             or theta < -self.theta_threshold_radians
             or theta > self.theta_threshold_radians
+            or cartx > 600
+            or cartx < 0
         )
 
-        cartx = self.state[0] * 1.5 + 600 / 2.0
+
         position = -(cartx-500)**2/10000
         # position = self.state[0] * 100
         # print("位置得分:",position)
@@ -147,7 +151,7 @@ class CartPoleEnv(gym.Env):
 
 
         if not done:
-            reward = 10 + position
+            reward = 5 + position
         elif self.steps_beyond_done is None:
             # Pole just fell!
             self.steps_beyond_done = 0
