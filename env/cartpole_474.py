@@ -98,6 +98,7 @@ class CartPoleEnv(gym.Env):
         assert self.action_space.contains(action), err_msg
 
         x, x_dot, theta, theta_dot = self.state
+
         force = self.force_mag if action == 1 else -self.force_mag
         costheta = math.cos(theta)
         sintheta = math.sin(theta)
@@ -131,13 +132,14 @@ class CartPoleEnv(gym.Env):
             or theta < -self.theta_threshold_radians
             or theta > self.theta_threshold_radians
         )
-        print(x_dot)
+
+        cartx = self.state[0] * 1.5 + 600 / 2.0
         if not done:
-            reward = 1.0
+            reward = 1.0 + cartx/1000
         elif self.steps_beyond_done is None:
             # Pole just fell!
             self.steps_beyond_done = 0
-            reward = 1.0
+            reward = 1.0 + cartx/1000
         else:
             if self.steps_beyond_done == 0:
                 logger.warn(
