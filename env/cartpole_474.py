@@ -67,13 +67,13 @@ class CartPoleEnv(gym.Env):
 
         # Angle at which to fail the episode
         self.theta_threshold_radians = 12 * 2 * math.pi / 360
-        self.x_threshold = 2.4
+        self.x_threshold = 4.8
 
         # Angle limit set to 2 * theta_threshold_radians so failing observation
         # is still within bounds.
         high = np.array(
             [
-                self.x_threshold * 2,
+                self.x_threshold,
                 np.finfo(np.float32).max,
                 self.theta_threshold_radians * 2,
                 np.finfo(np.float32).max,
@@ -83,6 +83,7 @@ class CartPoleEnv(gym.Env):
 
         self.action_space = spaces.Discrete(2)
         self.observation_space = spaces.Box(-high, high)
+        print(self.observation_space,'---------')
 
         self.seed()
         self.viewer = None
@@ -137,10 +138,10 @@ class CartPoleEnv(gym.Env):
         cartx = self.state[0] * 1.5 + 600 / 2.0
         position = -(cartx-500)**2/10000
         # position = self.state[0] * 100
-        print("位置得分:",position)
+        # print("位置得分:",position)
 
         direction = self.state[1] * 10
-        print("状态得分:", direction)
+        # print("状态得分:", direction)
 
 
 
@@ -209,8 +210,12 @@ class CartPoleEnv(gym.Env):
             self.axle.set_color(0.5, 0.5, 0.8)
             self.viewer.add_geom(self.axle)
             self.track = rendering.Line((0, carty), (screen_width, carty))
+            self.track2 = rendering.Line((500, 500), (500, 0))
+            self.track2.set_color(0, 0, 0)
+
             self.track.set_color(0, 0, 0)
             self.viewer.add_geom(self.track)
+            self.viewer.add_geom(self.track2)
 
             self._pole_geom = pole
 

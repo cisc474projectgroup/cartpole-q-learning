@@ -10,7 +10,6 @@ RECORD_PATH = os.path.join(os.path.dirname(__file__), "./upload")
 
 def main(episodes, render, monitor):
     env = gym.make("cartpole-v474")
-    # env = CartPoleEnv()
 
     q = Q(
         env.action_space.n, 
@@ -28,7 +27,7 @@ def main(episodes, render, monitor):
         gamma=0.99,
         learning_rate=0.5, learning_rate_decay=learning_decay, 
         epsilon=1.0, epsilon_decay=epsilon_decay,
-        max_step=250)
+        max_step=500)
 
     if monitor:
         env.monitor.start(RECORD_PATH)
