@@ -98,7 +98,7 @@ class CartPoleEnv(gym.Env):
     def step(self, action):
         err_msg = f"{action!r} ({type(action)}) invalid"
         assert self.action_space.contains(action), err_msg
-        goal_time = 0
+
         x, x_dot, theta, theta_dot = self.state
 
         force = self.force_mag if action == 1 else -self.force_mag
@@ -141,14 +141,12 @@ class CartPoleEnv(gym.Env):
 
         position = -(cartx-500)**2/10000
         # position = self.state[0] * 100
-        # print("position reward:",position)
-        if abs(cartx-500)<=10:
-            print('!')
-            goal_time +=1
-            goal+=100
+        # print("位置得分:",position)
+        if abs(position-500)<10:
+            goal+=1000
 
         direction = self.state[1] * 10
-        # print("direction reward:", direction)
+        # print("状态得分:", direction)
 
         if (x < -self.x_threshold/6 or x > self.x_threshold*13/6):
             goal += -10000
@@ -174,7 +172,7 @@ class CartPoleEnv(gym.Env):
             self.steps_beyond_done += 1
             reward = 0.0
 
-        return np.array(self.state, dtype=np.float32), reward, done,  goal_time
+        return np.array(self.state, dtype=np.float32), reward, done, {}
 
     def reset(self):
         self.state = self.np_random.uniform(low=-0.05, high=0.05, size=(4,))
