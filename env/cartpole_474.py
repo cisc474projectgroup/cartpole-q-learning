@@ -150,6 +150,7 @@ class CartPoleEnv(gym.Env):
         direction = self.state[1] * 10
         # print("direction reward:", direction)
 
+        # if hit the threshold
         if (x < -self.x_threshold/6 or x > self.x_threshold*13/6):
             goal += -10000
         else:
@@ -158,7 +159,7 @@ class CartPoleEnv(gym.Env):
 
         if not done:
             reward = 10 + position + goal
-            # print("总分：",reward)
+
         elif self.steps_beyond_done is None:
             # Pole just fell!
             self.steps_beyond_done = 0
