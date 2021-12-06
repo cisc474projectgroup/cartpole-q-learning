@@ -20,8 +20,8 @@ def main(episodes, render, monitor):
         )
     agent = Agent(q, epsilon=0.05)
 
-    learning_decay = lambda lr, t: max(0.1, min(0.5, 1.0 - math.log10((t + 1) / 25)))   # decay leanring rate
-    epsilon_decay = lambda eps, t: max(0.01, min(1.0, 1.0 - math.log10((t + 1) / 25)))  # 
+    learning_decay = lambda lr, t: max(0.1, min(0.5, 1.0 - math.log10((t/4 + 1) / 25)))   # decay leanring rate
+    epsilon_decay = lambda eps, t: max(0.01, min(1.0, 1.0 - math.log10((t/3 + 1) / 25)))  #
     trainer = Trainer(
         agent, 
         gamma=0.99,
