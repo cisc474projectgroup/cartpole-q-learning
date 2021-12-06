@@ -4,7 +4,7 @@ from collections import defaultdict
 from collections import deque
 from collections import namedtuple
 import numpy as np
-
+from matplotlib import pyplot as plt
 
 class Q():
 
@@ -92,19 +92,25 @@ class Trainer():
         default_epsilon = self.agent.epsilon
         self.agent.epsilon = self.epsilon
         values = []
+        reward_list=[]
+        hit_list=[]
         steps = deque(maxlen=100)
         lr = self.learning_rate
         for i in range(episode_count):
             obs = env.reset()
             step = 0
             done = False
+            reward_all = 0
+            hit_all =0
             while not done:
+                
                 if render and i>900:
                     env.render()
 
                 action = self.agent.act(obs)
-                next_obs, reward, done, _ = env.step(action)
-
+                next_obs, reward, done, hit = env.step(action)
+                hit_all += hit
+                reward_all +=reward
                 state = self.agent.q.observation_to_state(obs)
                 future = 0 if done else np.max(self.agent.q.values(next_obs))
                 value = self.agent.q.table[state][action]
@@ -119,11 +125,29 @@ class Trainer():
                 mean = np.mean(values)
                 steps.append(step)
                 mean_step = np.mean(steps)
-                print("Episode {}: {}steps(avg{}). epsilon={:.3f}, lr={:.3f}, mean q value={:.2f}".format(
-                    i, step, mean_step, self.agent.epsilon, lr, mean)
+                print("Episode {}: {}steps(avg{}). epsilon={:.3f}, lr={:.3f}, mean q value={:.2f} Reward={},hit={}".format(
+                    i, step, mean_step, self.agent.epsilon, lr, mean,reward_all,hit_all)
                     )
                 
                 if self.epsilon_decay is not None:                
                     self.agent.epsilon = self.epsilon_decay(self.agent.epsilon, i)
                 if self.learning_rate_decay is not None:
                     lr = self.learning_rate_decay(lr, i)
+              
+            reward_list.append(reward_all)
+            hit_list.append(hit_all)
+      
+        # plot in comparsion
+        plt.xlabel('Episodes')
+        plt.ylabel('reward')
+        plt.plot(reward_list, label='Q-learning', color='yellow')
+        plt.title('reward/Episode')
+        plt.show()
+
+        # plot in comparsion
+        plt.xlabel('Episodes')
+        plt.ylabel('goal_time')
+        plt.plot(hit_list, label='Q-learning', color='green')
+        plt.title('goal/Episode')
+        plt.show()
+

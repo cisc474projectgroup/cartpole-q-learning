@@ -5,16 +5,13 @@ import gym
 import env
 from agent import Q, Agent, Trainer
 
-RECORD_PATH = os.path.join(os.path.dirname(__file__), "./upload")
-
-
 def main(episodes, render, monitor,target =500):
     env = gym.make("cartpole-v474")
 
     q = Q(
         env.action_space.n, 
         env.observation_space, 
-        bin_size=[3, 3, 8, 5],
+        bin_size=[8, 6, 8, 5],
         low_bound=[None, -0.5, None, -math.radians(50)],
         high_bound=[None, 0.5, None, math.radians(50)]
         )
@@ -40,15 +37,10 @@ def main(episodes, render, monitor,target =500):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="train & run cartpole ")
-    parser.add_argument("--episode", type=int, default=2500, help="episode to train")
+    parser.add_argument("--episode", type=int, default=2000, help="episode to train")
     parser.add_argument("--render", action="store_true", help="render the screen")
     parser.add_argument("--monitor", action="store_true", help="monitor")
-    parser.add_argument("--upload", type=str, default="", help="upload key to openai gym (training is not executed)")
 
     args = parser.parse_args()
 
-    if args.upload:
-        if os.path.isdir(RECORD_PATH):
-            gym.upload(RECORD_PATH, api_key=args.upload)
-    else:
-        main(args.episode, args.render, args.monitor,target = 500)
+    main(args.episode, args.render, args.monitor,target = 500)

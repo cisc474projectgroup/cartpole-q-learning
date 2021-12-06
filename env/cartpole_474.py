@@ -148,23 +148,21 @@ class CartPoleEnv(gym.Env):
         # position = self.state[0] * 100
         # print("位置得分:",position)
 
-        direction = self.state[1] * 10
+        direction = self.state[1] * 1
         # print("状态得分:", direction)
 
 
         if (x < -self.x_threshold/6 or x > self.x_threshold*7/6):
-            goal = -1000
+            goal = -100
         else:
             goal = 0
 
-
+        hit = 0
         if not done:
             reward = 0
             if abs(self.state[0] - self.target) <= 0.005:
-              x=float(self.state[0])
-              y=float(self.target)
               reward += 100000
-              print('1000000')
+              hit+=1
               
             else:
               reward += 100 + direction 
@@ -175,7 +173,7 @@ class CartPoleEnv(gym.Env):
         elif self.steps_beyond_done is None:
             # Pole just fell!
             self.steps_beyond_done = 0
-            reward = -1000
+            reward = -100
         else:
             if self.steps_beyond_done == 0:
                 logger.warn(
@@ -187,7 +185,7 @@ class CartPoleEnv(gym.Env):
             self.steps_beyond_done += 1
             reward = 0.0
 
-        return np.array(self.state, dtype=np.float32), reward, done, {}
+        return np.array(self.state, dtype=np.float32), reward, done, hit
 
     def reset(self):
         self.state = self.np_random.uniform(low=-0.05, high=0.05, size=(4,))  # spawn randomly
