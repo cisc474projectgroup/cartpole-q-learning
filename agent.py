@@ -93,7 +93,6 @@ class Trainer():
         self.max_step = max_step
 
     def train(self, env, episode_count, render=False):
-        default_epsilon = self.agent.epsilon
         mean_step_all =[]
         mean_q_all=[]
         goal_time_all=[]

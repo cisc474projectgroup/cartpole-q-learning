@@ -1,8 +1,10 @@
-# cartpole-q-learning
+# Solve CartPole-variation using Q-learning
 
-Solve CartPole environment on OpenAI Gym by simple q-learning algorithm
+Solve a modified CartPole environment on OpenAI Gym by simple q-learning algorithm.
 
-![q-learning.PNG](q-learning.PNG)
+We implemented a variation of the CartPole problem raised ​​by Barto, Sutton, and Anderson. The Q-learning approach is used to solve this continuous time-space problem where different periodic goals require different strategies. In our experiment, the cart has to balance the pole and is supposed to drive from left to right and oscillate near a single position. Since Q-learning is designed for solving discrete time-space problems, a function is introduced to transform continuous time-space to discrete with the idea of binning. Our result indicates that with the help of discrete-binning, Q-learning can better solve the CartPole parking problem in a generalized way. 
+
+This repo is based on work of [icoxfog417](https://github.com/icoxfog417/cartpole-q-learning).
 
 ## Run
 
@@ -12,7 +14,27 @@ python cartpole.py
 
 * `--episode`: direct the episode count
 * `--render`: render the GUI
-* `--monitor`: monitor the training process. After the monitoring, you can upload it by `--upload`
 
-Of course you have to install `gym` to run. And it works on Python3.
+
+### env.cartpole_474.py
+
+Modified `step` function, includes new reward function:
+
+    New end condiction.
+    Reward based on posiiton.
+    Reward baesd on momuntumun.
+
+modified `render` function.
+
+### agent.py
+
+added reward static
+
+added target_hit
+
+added plt function
+
+### cartpole.py
+modified bin_size
+modified `learning_rate_decay` and `epsilon_dacay`
 

@@ -1,27 +1,27 @@
 import os
 import math
 import argparse
-import gym
 import env
+import gym
 from agent import Q, Agent, Trainer
 
 RECORD_PATH = os.path.join(os.path.dirname(__file__), "./upload")
 
 
-def main(episodes, render, monitor,target =500):
+def main(episodes, render, monitor):
     env = gym.make("cartpole-v474")
 
     q = Q(
         env.action_space.n, 
         env.observation_space, 
-        bin_size=[17, 5, 8, 7],
+        bin_size=[17, 5, 8, 7],     # bin for [position,relative position,momunitum,angle]
         low_bound=[None, -0.5, None, -math.radians(50)],
         high_bound=[None, 0.5, None, math.radians(50)]
         )
     agent = Agent(q, epsilon=0.05)
 
-    learning_decay = lambda lr, t: max(0.1, min(0.5, 1.0 - math.log10((t + 1) / 25)))
-    epsilon_decay = lambda eps, t: max(0.01, min(1.0, 1.0 - math.log10((t + 1) / 25)))
+    learning_decay = lambda lr, t: max(0.1, min(0.5, 1.0 - math.log10((t + 1) / 25)))   # decay leanring rate
+    epsilon_decay = lambda eps, t: max(0.01, min(1.0, 1.0 - math.log10((t + 1) / 25)))  # 
     trainer = Trainer(
         agent, 
         gamma=0.99,
@@ -51,4 +51,4 @@ if __name__ == "__main__":
         if os.path.isdir(RECORD_PATH):
             gym.upload(RECORD_PATH, api_key=args.upload)
     else:
-        main(args.episode, args.render, args.monitor,target = 500)
+        main(args.episode, args.render, args.monitor)
