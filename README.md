@@ -6,7 +6,7 @@ We implemented a variation of the CartPole problem raised ​​by Barto, Sutton
 
 This repo is based on work of [icoxfog417](https://github.com/icoxfog417/cartpole-q-learning) where is single target.
 The environment is [cartpole](https://github.com/cisc474projectgroup/cartpole).
-The report of this project can be found [here](Q-learning(RL) for multiple stage problem.pdf)
+The report of this project can be found [here](report.pdf)
 ## Run
 
 ```
